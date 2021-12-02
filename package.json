@@ -1,0 +1,34 @@
+{
+  "name": "lg-thinq",
+  "version": "0.1.0",
+  "description": "Plugin for controlling/monitoring LG ThinQ device via their ThinQ platform.",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "eslint src/**.ts --max-warnings=0",
+    "watch": "npm run build && npm link && nodemon",
+    "build": "rimraf ./dist && tsc",
+    "prepublishOnly": "npm run lint && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "eslint": "^7.32.0",
+    "nodemon": "^2.0.12",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk": "^2.2.11",
+    "axios": "^0.24.0",
+    "axios-retry": "^3.2.4",
+    "luxon": "^2.1.1",
+    "node-forge": "^0.10.0",
+    "qs": "^6.10.1",
+    "uuid": "^8.3.2"
+  }
+}

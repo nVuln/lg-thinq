@@ -1,6 +1,6 @@
 {
   "name": "lg-thinq",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Plugin for controlling/monitoring LG ThinQ device via their ThinQ platform.",
   "main": "dist/index.js",
   "scripts": {

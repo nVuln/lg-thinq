@@ -31,9 +31,13 @@ export default class WasherDryer extends BaseDevice {
     this.on('setActive', this.setActive.bind(this));
   }
 
-  async setActive() {
+  async setActive(value) {
     if (!this.statusIsRemoteStartEnable) {
       return;
+    }
+
+    if (value) {
+      //turn on
     }
 
     return;

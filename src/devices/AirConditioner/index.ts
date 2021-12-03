@@ -15,47 +15,47 @@ export default class AirConditioner extends BaseDevice {
       this.log.debug('Active status =>', value);
       this.emit('getActive', !!value);
       if (!value) {
-        this.emit('getCurrentHeaterCoolerState', 'INACTIVE');
+        this.emit('getCurrentAirConditionerState', 'INACTIVE');
       }
     });
 
     this.on('airState.opMode', (value) => {
       const intValue = parseInt(value);
       if (!this.statusIsPowerOn) {
-        this.emit('getCurrentHeaterCoolerState', 'INACTIVE');
+        this.emit('getCurrentAirConditionerState', 'INACTIVE');
       } else if ([0].includes(intValue)) {
-        this.emit('getCurrentHeaterCoolerState', 'COOLING');
+        this.emit('getCurrentAirConditionerState', 'COOLING');
       } else if ([1, 4].includes(intValue)) {
-        this.emit('getCurrentHeaterCoolerState', 'HEATING');
+        this.emit('getCurrentAirConditionerState', 'HEATING');
       } else if ([2, 8].includes(intValue)) {
-        this.emit('getCurrentHeaterCoolerState', 'IDLE');
+        this.emit('getCurrentAirConditionerState', 'IDLE');
       } else if ([6, -1].includes(intValue)) {
         // auto mode
         if (this.currentTemperature < this.targetTemperature) {
-          this.emit('getCurrentHeaterCoolerState', 'HEATING');
+          this.emit('getCurrentAirConditionerState', 'HEATING');
         } else {
-          this.emit('getCurrentHeaterCoolerState', 'COOLING');
+          this.emit('getCurrentAirConditionerState', 'COOLING');
         }
       } else {
         this.log.warn('Unsupported value opMode =', value);
       }
 
       if (intValue === 0) {
-        this.emit('getTargetHeaterCoolerState', 'COOL');
+        this.emit('getTargetAirConditionerState', 'COOL');
       } else if ([1, 4].includes(intValue)) {
-        this.emit('getTargetHeaterCoolerState', 'HEAT');
+        this.emit('getTargetAirConditionerState', 'HEAT');
       } else if ([6, -1].includes(intValue)) {
         if (this.currentTemperature < this.targetTemperature) {
-          this.emit('getTargetHeaterCoolerState', 'HEAT');
+          this.emit('getTargetAirConditionerState', 'HEAT');
         } else {
-          this.emit('getTargetHeaterCoolerState', 'COOL');
+          this.emit('getTargetAirConditionerState', 'COOL');
         }
       }
     });
 
     this.on('airState.windStrength', (value) => {
       this.log.debug('Rotation speed =>', value);
-      this.emit('getRotationSpeed', FanSpeed[value] || 'AUTO');
+      this.emit('getFanSpeed', FanSpeed[value] || 'AUTO');
     });
 
     this.on('airState.wDir.vStep', () => {
@@ -68,7 +68,11 @@ export default class AirConditioner extends BaseDevice {
 
     this.on('airState.lightingState.displayControl', (value) => {
       this.log.debug('Light signal =>', value);
-      this.emit('getLightSignal', !!value);
+      this.emit('getLightDisplay', !!value);
+    });
+
+    this.on('airState.tempState.current', (value) => {
+      this.emit('getCurrentTemperature', value);
     });
 
     this.on('airState.tempState.target', (value) => {
@@ -93,7 +97,7 @@ export default class AirConditioner extends BaseDevice {
 
     // setter
     this.on('setActive', this.setActive.bind(this));
-    this.on('setTargetHeaterCoolerState', this.setTargetHeaterCoolerState.bind(this));
+    this.on('setTargetAirConditionerState', this.setTargetAirConditionerState.bind(this));
     this.on('setFanSpeed', this.setFanSpeed.bind(this));
     // this.on('setSwingMode', this.setSwingMode.bind(this));
     this.on('setLightDisplay', this.setLightDisplay.bind(this));
@@ -159,7 +163,7 @@ export default class AirConditioner extends BaseDevice {
     });
   }
 
-  public async setTargetHeaterCoolerState(value: 'COOL' | 'HEAT') {
+  public async setTargetAirConditionerState(value: 'COOL' | 'HEAT') {
     const opMode = parseInt(this.device.snapshot['opMode'] || -1);
     if (this.device.snapshot['opMode'] === 6) {
       return;

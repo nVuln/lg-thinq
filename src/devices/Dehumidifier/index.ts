@@ -47,13 +47,13 @@ export default class Dehumidifier extends BaseDevice {
     this.on('setDesiredHumidity', this.setDesiredHumidity.bind(this));
   }
 
-  async setActive(value) {
+  public async setActive(value) {
     const isOn = !!value as boolean;
     if (this.statusIsPowerOn && isOn) {
       return; // don't send same status
     }
 
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.operation',
       dataValue: isOn,
     }).then(() => {
@@ -61,13 +61,13 @@ export default class Dehumidifier extends BaseDevice {
     });
   }
 
-  async setRotationSpeed(value) {
+  public async setRotationSpeed(value) {
     if (!this.statusIsPowerOn) {
       return;
     }
 
     const windStrength = RotateSpeed[value] || RotateSpeed.HIGH;
-    this.ThinQ?.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.windStrength',
       dataValue: windStrength,
     }).then(() => {
@@ -75,12 +75,12 @@ export default class Dehumidifier extends BaseDevice {
     });
   }
 
-  async setDesiredHumidity(value) {
+  public async setDesiredHumidity(value) {
     if (!this.statusIsPowerOn) {
       return;
     }
 
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.humidity.desired',
       dataValue: parseInt(value),
     }).then(() => {

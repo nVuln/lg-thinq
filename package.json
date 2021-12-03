@@ -9,9 +9,20 @@
     "build": "rimraf ./dist && tsc",
     "prepublishOnly": "npm run lint && npm run build"
   },
+  "homepage": "https://github.com/nVuln/lg-thinq#readme",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nVuln/lg-thinq.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nVuln/lg-thinq/issues"
+  },
+  "engines": {
+    "node": ">=10.17.0"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@types/node": "^16.11.11",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
@@ -30,5 +41,15 @@
     "node-forge": "^0.10.0",
     "qs": "^6.10.1",
     "uuid": "^8.3.2"
-  }
+  },
+  "funding": [
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/ndhan"
+    },
+    {
+      "type": "buymeacoffee",
+      "url": "https://www.buymeacoffee.com/nVuln"
+    }
+  ]
 }

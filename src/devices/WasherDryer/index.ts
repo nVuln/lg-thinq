@@ -31,16 +31,18 @@ export default class WasherDryer extends BaseDevice {
     this.on('setActive', this.setActive.bind(this));
   }
 
-  async setActive(value) {
+  public async setActive(value) {
     if (!this.statusIsRemoteStartEnable) {
       return;
     }
 
-    if (value) {
-      //turn on
-    }
-
-    return;
+    const onValue = value ? 1 : 0;
+    return await this.ThinQ.deviceControl(this.device, {
+      dataKey: 'airState.operation',
+      dataValue: onValue,
+    }).then(() => {
+      this.emit('airState.operation', onValue);
+    });
   }
 
   public get statusIsRemoteStartEnable() {

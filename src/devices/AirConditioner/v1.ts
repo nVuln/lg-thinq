@@ -3,7 +3,7 @@ import DeviceModel, {RangeValue} from '../../utils/DeviceModel';
 import {loopupEnum} from '../../constants/helper';
 
 export default class AirConditionerV1 extends AirConditioner {
-  protected async setActive(value) {
+  public async setActive(value) {
     const isOn = value ? 1 : 0;
     if (this.statusIsPowerOn && isOn) {
       return; // don't send same status
@@ -17,7 +17,7 @@ export default class AirConditionerV1 extends AirConditioner {
     });
   }
 
-  protected async setTargetTemperature(value) {
+  public async setTargetTemperature(value) {
     if (!this.statusIsPowerOn) {
       return;
     }
@@ -32,7 +32,7 @@ export default class AirConditionerV1 extends AirConditioner {
     });
   }
 
-  protected async setFanSpeed(value) {
+  public async setFanSpeed(value) {
     if (!this.statusIsPowerOn) {
       return;
     }
@@ -43,8 +43,8 @@ export default class AirConditionerV1 extends AirConditioner {
     });
   }
 
-  async setOpMode(opMode) {
-    this.ThinQ.thinq1DeviceControl(this.device, 'OpMode', opMode).then(() => {
+  public async setOpMode(opMode) {
+    return await this.ThinQ.thinq1DeviceControl(this.device, 'OpMode', opMode).then(() => {
       this.emit('airState.opMode', opMode);
     });
   }

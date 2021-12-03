@@ -38,10 +38,10 @@ export default class Refrigerator extends BaseDevice {
     this.on('setEcoFriendly', this.setEcoFriendly.bind(this));
   }
 
-  async setExpressMode(value) {
+  public async setExpressMode(value) {
     const On = this.device.deviceModel.lookupMonitorName('expressMode', '@CP_ON_EN_W');
     const Off = this.device.deviceModel.lookupMonitorName('expressMode', '@CP_OFF_EN_W');
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: null,
       dataValue: null,
       dataSetList: {
@@ -56,10 +56,10 @@ export default class Refrigerator extends BaseDevice {
     });
   }
 
-  async setExpressFridge(value) {
+  public async setExpressFridge(value) {
     const On = this.device.deviceModel.lookupMonitorName('expressFridge', '@CP_ON_EN_W');
     const Off = this.device.deviceModel.lookupMonitorName('expressFridge', '@CP_OFF_EN_W');
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: null,
       dataValue: null,
       dataSetList: {
@@ -74,10 +74,10 @@ export default class Refrigerator extends BaseDevice {
     });
   }
 
-  async setEcoFriendly(value) {
+  public async setEcoFriendly(value) {
     const On = this.device.deviceModel.lookupMonitorName('ecoFriendly', '@CP_ON_EN_W');
     const Off = this.device.deviceModel.lookupMonitorName('ecoFriendly', '@CP_OFF_EN_W');
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: null,
       dataValue: null,
       dataSetList: {
@@ -105,17 +105,17 @@ export default class Refrigerator extends BaseDevice {
     return indexValue;
   }
 
-  async setFridgeTemperature(value) {
-    await this.setTemperature('fridgeTemp', value);
+  public async setFridgeTemperature(value) {
+    return await this.setTemperature('fridgeTemp', value);
   }
 
-  async setFreezerTemperature(value) {
-    await this.setTemperature('freezerTemp', value);
+  public async setFreezerTemperature(value) {
+    return await this.setTemperature('freezerTemp', value);
   }
 
-  async setTemperature(key: string, temp: string) {
+  protected async setTemperature(key: string, temp: string) {
     const indexValue = this.lookupTemperatureIndexValue(key, temp);
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: null,
       dataValue: null,
       dataSetList: {

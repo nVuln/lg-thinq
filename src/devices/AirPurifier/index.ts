@@ -72,22 +72,22 @@ export default class AirPurifier extends BaseDevice {
     this.on('setLightSignal', this.setLightSignal.bind(this));
   }
 
-  protected get statusIsPowerOn() {
+  public get statusIsPowerOn() {
     return !!this.device.snapshot['airState.operation'] as boolean;
   }
 
-  protected get statusIsNormalMode() {
+  public get statusIsNormalMode() {
     return this.device.snapshot['airState.opMode'] === 14;
   }
 
-  protected async setActive(value) {
+  public async setActive(value) {
     const onValue = value ? 1 : 0;
     if (this.statusIsPowerOn && onValue) {
       return;
     }
 
     this.log.debug('Set Active State ->', value);
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.operation',
       dataValue: onValue,
     }).then(() => {
@@ -95,7 +95,7 @@ export default class AirPurifier extends BaseDevice {
     });
   }
 
-  protected async setTargetAirPurifierState(value: 'MANUAL' | 'AUTO') {
+  public async setTargetAirPurifierState(value: 'MANUAL' | 'AUTO') {
     if (!this.statusIsPowerOn || (this.statusIsNormalMode && value === 'MANUAL')) {
       return;
     }
@@ -106,7 +106,7 @@ export default class AirPurifier extends BaseDevice {
     });
   }
 
-  protected async setRotationSpeed(value: 'LOW' | 'MEDIUM' | 'HIGH' | 'EXTRA') {
+  public async setRotationSpeed(value: 'LOW' | 'MEDIUM' | 'HIGH' | 'EXTRA') {
     if (!this.statusIsPowerOn || !this.statusIsNormalMode) {
       return;
     }
@@ -120,7 +120,7 @@ export default class AirPurifier extends BaseDevice {
     });
   }
 
-  protected async setSwingMode(value) {
+  public async setSwingMode(value) {
     if (!this.statusIsPowerOn || !this.statusIsNormalMode) {
       return;
     }
@@ -133,7 +133,7 @@ export default class AirPurifier extends BaseDevice {
     });
   }
 
-  protected async setLightSignal(value) {
+  public async setLightSignal(value) {
     if (!this.statusIsPowerOn) {
       return;
     }

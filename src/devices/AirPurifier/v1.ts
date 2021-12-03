@@ -3,7 +3,7 @@ import DeviceModel from '../../utils/DeviceModel';
 import {AirState} from '../AirConditioner/v1';
 
 export default class AirPurifierV1 extends V2 {
-  async setActive(value) {
+  public async setActive(value) {
     if (this.statusIsPowerOn && !!value) {
       return;
     }
@@ -11,7 +11,7 @@ export default class AirPurifierV1 extends V2 {
     await this.ThinQ.thinq1DeviceControl(this.device, 'Operation', value ? '1' : '0');
   }
 
-  async setTargetAirPurifierState(value) {
+  public async setTargetAirPurifierState(value) {
     if (!this.statusIsPowerOn || (this.statusIsNormalMode && value === 'MANUAL')) {
       return;
     }
@@ -19,7 +19,7 @@ export default class AirPurifierV1 extends V2 {
     await this.ThinQ.thinq1DeviceControl(this.device, 'OpMode', value ? '16' : '14');
   }
 
-  async setRotationSpeed(value) {
+  public async setRotationSpeed(value) {
     if (!this.statusIsPowerOn || !this.statusIsNormalMode) {
       return;
     }
@@ -28,7 +28,7 @@ export default class AirPurifierV1 extends V2 {
     await this.ThinQ.thinq1DeviceControl(this.device, 'WindStrength', windStrength.toString());
   }
 
-  async setSwingMode(value) {
+  public async setSwingMode(value) {
     if (!this.statusIsPowerOn || !this.statusIsNormalMode) {
       return;
     }
@@ -36,7 +36,7 @@ export default class AirPurifierV1 extends V2 {
     await this.ThinQ.thinq1DeviceControl(this.device, 'CirculateDir', value ? '1' : '0');
   }
 
-  async setLightSignal(value) {
+  public async setLightSignal(value) {
     if (!this.statusIsPowerOn) {
       return;
     }

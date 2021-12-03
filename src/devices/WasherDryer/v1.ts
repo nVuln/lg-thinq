@@ -3,8 +3,8 @@ import DeviceModel from '../../utils/DeviceModel';
 import {lookupEnumIndex, loopupEnum} from '../../constants/helper';
 
 export default class WasherDryerV1 extends WasherDryer {
-  async setActive(value) {
-    await this.ThinQ.thinq1DeviceControl(this.device, 'Power', value as boolean ? 'On' : 'Off');
+  public async setActive(value) {
+    return await this.ThinQ.thinq1DeviceControl(this.device, 'Power', value as boolean ? 'On' : 'Off');
   }
 }
 

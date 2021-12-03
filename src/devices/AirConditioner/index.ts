@@ -100,13 +100,13 @@ export default class AirConditioner extends BaseDevice {
     this.on('setTargetTemperature', this.setTargetTemperature.bind(this));
   }
 
-  protected async setActive(value) {
+  public async setActive(value) {
     const isOn = value ? 1 : 0;
     if (this.statusIsPowerOn && isOn) {
       return; // don't send same status
     }
 
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.operation',
       dataValue: isOn as number,
     }, 'Operation').then(() => {
@@ -114,7 +114,7 @@ export default class AirConditioner extends BaseDevice {
     });
   }
 
-  protected async setTargetTemperature(value) {
+  public async setTargetTemperature(value) {
     if (!this.statusIsPowerOn) {
       return;
     }
@@ -124,7 +124,7 @@ export default class AirConditioner extends BaseDevice {
       return;
     }
 
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.tempState.target',
       dataValue: temperature,
     }).then(() => {
@@ -132,13 +132,13 @@ export default class AirConditioner extends BaseDevice {
     });
   }
 
-  protected async setFanSpeed(value: 'LOW' | 'LOW_MEDIUM' | 'MEDIUM' | 'MEDIUM_HIGH' | 'HIGH' | 'AUTO') {
+  public async setFanSpeed(value: 'LOW' | 'LOW_MEDIUM' | 'MEDIUM' | 'MEDIUM_HIGH' | 'HIGH' | 'AUTO') {
     if (!this.statusIsPowerOn) {
       return;
     }
 
     const windStrength = FanSpeed[value] || /* AUTO */ 8;
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.windStrength',
       dataValue: windStrength,
     }).then(() => {
@@ -146,12 +146,12 @@ export default class AirConditioner extends BaseDevice {
     });
   }
 
-  protected async setLightDisplay(value) {
+  public async setLightDisplay(value) {
     if (!this.statusIsPowerOn) {
       return;
     }
 
-    this.ThinQ.deviceControl(this.device, {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.lightingState.displayControl',
       dataValue: value ? 1 : 0,
     }).then(() => {
@@ -159,21 +159,21 @@ export default class AirConditioner extends BaseDevice {
     });
   }
 
-  protected async setTargetHeaterCoolerState(value: 'COOL' | 'HEAT') {
+  public async setTargetHeaterCoolerState(value: 'COOL' | 'HEAT') {
     const opMode = parseInt(this.device.snapshot['opMode'] || -1);
     if (this.device.snapshot['opMode'] === 6) {
       return;
     }
 
     if (value === 'HEAT' && ![1, 4].includes(opMode)) {
-      await this.setOpMode(4);
+      return await this.setOpMode(4);
     } else if (value === 'COOL' && ![0].includes(opMode)) {
-      await this.setOpMode(0);
+      return await this.setOpMode(0);
     }
   }
 
-  async setOpMode(opMode) {
-    return this.ThinQ.deviceControl(this.device, {
+  public async setOpMode(opMode) {
+    return await this.ThinQ.deviceControl(this.device, {
       dataKey: 'airState.opMode',
       dataValue: opMode,
     }).then(() => {
@@ -187,7 +187,7 @@ export default class AirConditioner extends BaseDevice {
     return !!(vStep + hStep);
   }
 
-  protected get statusIsPowerOn() {
+  public get statusIsPowerOn() {
     return !!this.device.snapshot['airState.operation'];
   }
 

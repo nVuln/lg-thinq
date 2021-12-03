@@ -3,7 +3,7 @@ import DeviceModel from '../../utils/DeviceModel';
 import {lookupEnumIndex, loopupEnum} from '../../constants/helper';
 
 export default class RefrigeratorV1 extends Refrigerator {
-  async setExpressMode(value) {
+  public async setExpressMode(value) {
     const On = this.device.deviceModel.enumValue('IcePlus', '@CP_ON_EN_W');
     const Off = this.device.deviceModel.enumValue('IcePlus', '@CP_OFF_EN_W');
 
@@ -12,7 +12,7 @@ export default class RefrigeratorV1 extends Refrigerator {
     });
   }
 
-  async setExpressFridge(value) {
+  public async setExpressFridge(value) {
     const On = this.device.deviceModel.enumValue('ExpressFridge', '@CP_ON_EN_W');
     const Off = this.device.deviceModel.enumValue('ExpressFridge', '@CP_OFF_EN_W');
 
@@ -21,7 +21,7 @@ export default class RefrigeratorV1 extends Refrigerator {
     });
   }
 
-  async setEcoFriendly(value) {
+  public async setEcoFriendly(value) {
     const On = this.device.deviceModel.enumValue('EcoFriendly', '@CP_ON_EN_W');
     const Off = this.device.deviceModel.enumValue('EcoFriendly', '@CP_OFF_EN_W');
 
@@ -30,17 +30,17 @@ export default class RefrigeratorV1 extends Refrigerator {
     });
   }
 
-  async setFridgeTemperature(value) {
-    await this.setTemperature('TempRefrigerator', value);
+  public async setFridgeTemperature(value) {
+   return  await this.setTemperature('TempRefrigerator', value);
   }
 
-  async setFreezerTemperature(value) {
-    await this.setTemperature('TempFreezer', value);
+  public async setFreezerTemperature(value) {
+    return await this.setTemperature('TempFreezer', value);
   }
 
-  async setTemperature(key: string, temp: string) {
+  protected async setTemperature(key: string, temp: string) {
     const indexValue = this.lookupTemperatureIndexValue(key, temp);
-    await this.ThinQ.thinq1DeviceControl(this.device, key, indexValue);
+    return await this.ThinQ.thinq1DeviceControl(this.device, key, indexValue);
   }
 
   public get statusIsExpressModeOn() {

@@ -95,6 +95,10 @@ export default class AirConditioner extends BaseDevice {
       this.emit('getAirQuality', parseInt(value));
     });
 
+    this.on('airState.wMode.jet', (value) => {
+      this.emit('getJetMode', parseInt(value));
+    });
+
     // setter
     this.on('setActive', this.setActive.bind(this));
     this.on('setTargetAirConditionerState', this.setTargetAirConditionerState.bind(this));
@@ -102,6 +106,7 @@ export default class AirConditioner extends BaseDevice {
     // this.on('setSwingMode', this.setSwingMode.bind(this));
     this.on('setLightDisplay', this.setLightDisplay.bind(this));
     this.on('setTargetTemperature', this.setTargetTemperature.bind(this));
+    this.on('setJetMode', this.setJetMode.bind(this));
   }
 
   public async setActive(value) {
@@ -182,6 +187,19 @@ export default class AirConditioner extends BaseDevice {
       dataValue: opMode,
     }).then(() => {
       this.emit('airState.opMode', opMode);
+    });
+  }
+
+  public async setJetMode(jetModeValue) {
+    if (!this.statusIsPowerOn) {
+      return;
+    }
+
+    return await this.ThinQ.deviceControl(this.device, {
+      dataKey: 'airState.wMode.jet',
+      dataValue: jetModeValue ? 1 : 0,
+    }).then(() => {
+      this.emit('airState.wMode.jet', jetModeValue);
     });
   }
 

@@ -12,7 +12,7 @@ export default class AirConditionerV1 extends AirConditioner {
     const op = isOn ? ACOperation.RIGHT_ON : ACOperation.OFF;
     const opValue = this.device.deviceModel.enumValue('Operation', op);
 
-    this.ThinQ.thinq1DeviceControl(this.device, 'Operation', opValue).then(() => {
+    return await this.ThinQ.thinq1DeviceControl(this.device, 'Operation', opValue).then(() => {
       this.emit('airState.operation', isOn);
     });
   }
@@ -27,7 +27,7 @@ export default class AirConditionerV1 extends AirConditioner {
       return;
     }
 
-    this.ThinQ.thinq1DeviceControl(this.device, 'TempCfg', temperature.toString()).then(() => {
+    return await this.ThinQ.thinq1DeviceControl(this.device, 'TempCfg', temperature.toString()).then(() => {
       this.emit('airState.tempState.target', temperature);
     });
   }
@@ -38,7 +38,7 @@ export default class AirConditionerV1 extends AirConditioner {
     }
 
     const windStrength = FanSpeed[value] || /* AUTO */ 8;
-    this.ThinQ.thinq1DeviceControl(this.device, 'WindStrength', windStrength).then(() => {
+    return await this.ThinQ.thinq1DeviceControl(this.device, 'WindStrength', windStrength).then(() => {
       this.emit('airState.windStrength', windStrength);
     });
   }
@@ -46,6 +46,16 @@ export default class AirConditionerV1 extends AirConditioner {
   public async setOpMode(opMode) {
     return await this.ThinQ.thinq1DeviceControl(this.device, 'OpMode', opMode).then(() => {
       this.emit('airState.opMode', opMode);
+    });
+  }
+
+  public async setJetMode(jetModeValue) {
+    if (!this.statusIsPowerOn) {
+      return;
+    }
+
+    return await this.ThinQ.thinq1DeviceControl(this.device, 'Jet', jetModeValue ? '1' : '0').then(() => {
+      this.emit('airState.wMode.jet', jetModeValue);
     });
   }
 }
@@ -99,6 +109,10 @@ export function AirState(deviceModel: DeviceModel, decodedMonitor) {
 
   if (decodedMonitor['SensorPM10']) {
     airState['airState.quality.PM10'] = parseInt(decodedMonitor['SensorPM10']);
+  }
+
+  if (decodedMonitor['Jet']) {
+    airState['airState.wMode.jet'] = parseInt(decodedMonitor['Jet']);
   }
 
   return airState;
